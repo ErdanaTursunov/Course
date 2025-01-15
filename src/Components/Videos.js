@@ -1,9 +1,6 @@
-
-
-
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { $host } from '../http/axios';
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { $host } from "../http/axios";
 
 const Videos = () => {
   const { courseId } = useParams();
@@ -13,16 +10,19 @@ const Videos = () => {
   const [videoCount, setVideoCount] = useState(0);
 
   useEffect(() => {
-    const fetchDatas = async () => {
+    const fetchData = async () => {
+      setIsLoading(true);
       try {
-        const response = await $host.get('/courses');
-        setCourses(response.data);
+        const response = await $host.get(`/courses/${courseId}`);
+        setCourses([response.data]); // Обратите внимание на изменение здесь
       } catch (error) {
-        console.error('Error fetching course data:', error);
+        console.error("Error fetching course data:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
-    fetchDatas();
-  }, []);
+    fetchData();
+  }, [courseId]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,9 +30,9 @@ const Videos = () => {
       try {
         const response = await $host.get(`/course/${courseId}`);
         setVideos(response.data);
-        setVideoCount(response.data.length);  // Обновляем количество видео
+        setVideoCount(response.data.length); // Обновляем количество видео
       } catch (error) {
-        console.error('Error fetching video data:', error);
+        console.error("Error fetching video data:", error);
       } finally {
         setIsLoading(false);
       }
@@ -47,9 +47,14 @@ const Videos = () => {
         <div className="row">
           <div className="column">
             <div className="thumb">
-            {courses.map(course => (
+              {courses.map((course) => (
                 <div key={course.id}>
-                  {course.image && <img src={`http://localhost:3001/images/${course.image}`} alt={course.title} />}
+                  {course.image && (
+                    <img
+                      src={`${process.env.REACT_APP_BASE_URL}/images/${course.image}`}
+                      alt={course.title}
+                    />
+                  )}
                 </div>
               ))}
               <span>Количество видео: {videoCount}</span>
@@ -57,7 +62,7 @@ const Videos = () => {
           </div>
           <div className="column">
             <div className="details">
-              {courses.map(course => (
+              {courses.map((course) => (
                 <div key={course.id}>
                   <h3>{course.title}</h3>
                   <p>{course.description}</p>
@@ -69,14 +74,26 @@ const Videos = () => {
         </div>
       </section>
       <section className="course-videos">
-        <h1 style={{ marginBottom: '10px' }}>Видео курса</h1>
+        <h1 style={{ marginBottom: "10px" }}>Видео курса</h1>
         {isLoading ? (
           <p>Загрузка...</p>
         ) : (
           <div className="box-container">
-            {videos.map(video => (
-              <a key={video.id} href={`/video/${video.id}`} className="box">
-                <img src={`/images/post-2-3.png`} alt={video.title} />
+            {videos.map((video) => (
+              <a
+                key={video.id}
+                href={`/admin/video/${video.id}`}
+                className="box"
+              >
+                <div key={video.id}>
+                  {video.imagepath && (
+                    <img
+                      src={`${process.env.REACT_APP_BASE_URL}${video.imagepath}`}
+                      alt={video.title}
+                    />
+                  )}
+                </div>
+
                 <h3>{video.title}</h3>
               </a>
             ))}

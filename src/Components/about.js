@@ -17,7 +17,7 @@ const About = () => {
           <div className="content">
             <h3>Имя Учителя</h3>
             <p>Информация об учителе</p>
-            <a href="course.html" className="inline-btn">Курсы</a>
+            <a href="/course" className="inline-btn">Курсы</a>
           </div>
         </div>
         

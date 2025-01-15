@@ -9,6 +9,7 @@ const VideoUpload = () => {
     description: '',
     courseId: '',
     videoFile: null,
+    imageFile: null // Добавлено новое состояние для файла изображения
   });
 
   const [courses, setCourses] = useState([]);
@@ -37,6 +38,12 @@ const VideoUpload = () => {
     const { name, files } = e.target;
     setVideoData({ ...videoData, [name]: files[0] });
   };
+  
+  // Добавлен новый обработчик для выбора файла изображения
+  const handleImageFileChange = (e) => {
+    const { name, files } = e.target;
+    setVideoData({ ...videoData, [name]: files[0] });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -47,6 +54,7 @@ const VideoUpload = () => {
       formData.append('description', videoData.description);
       formData.append('courseId', videoData.courseId);
       formData.append('file', videoData.videoFile);
+      formData.append('image', videoData.imageFile); // Добавлено новое поле для изображения
 
       const response = await $authHost.post('/course/upload', formData);
       console.log(response.data);
@@ -57,6 +65,7 @@ const VideoUpload = () => {
         description: '',
         courseId: '',
         videoFile: null,
+        imageFile: null // Очищаем состояние файла изображения
       });
       setError('');
       window.location.reload();
@@ -120,6 +129,16 @@ const VideoUpload = () => {
                   </option>
                 ))}
               </select>
+              <h1>Выберите изображение:</h1>
+              <input
+                type='file'
+                name='imageFile'
+                id='imageInput'
+                accept='image/*'
+                onChange={handleImageFileChange} // Обработчик для выбора файла изображения
+                required
+              />
+
               <button type='submit' disabled={isLoading}>
                 {isLoading ? 'Загрузка...' : 'Загрузить'}
               </button>

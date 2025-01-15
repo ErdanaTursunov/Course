@@ -2,7 +2,8 @@ import React from 'react';
 import Header from './Header';
 import '../App.css'; 
 import withAuth from './WithAuth';
-import About from '../Components/about';
+import About from './about';
+
 
 const Home = () => {
   return (

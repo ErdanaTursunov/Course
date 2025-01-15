@@ -26,7 +26,7 @@ const Courses = () => {
       <div className="box-container">
         {courses.map(course => (
           <a key={course.id} className="box" href={`/course/${course.id}`}>
-             {course.image && <img src={`http://localhost:3001/images/${course.image}`} alt={course.title} />}
+             {course.image && <img src={`${process.env.REACT_APP_BASE_URL}/images/${course.image}`} alt={course.title} />}
             <h3>{course.title}</h3>
             <p>{course.description}</p>
           </a>
